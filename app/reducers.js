@@ -1,10 +1,11 @@
-function todos(state = [], action) {
-  switch (action.type) {
-    case 'ADD_TODO':
-      return state.concat([action.text])
-    default:
-      return state
-  }
-}
+const { combineReducers } = require('redux');
+const { routerReducer } = require('react-router-redux');
+const vipReducer = require('./vip/reducer');
 
-module.exports = todos;
+const combinedReducers = combineReducers({
+  appData: (state = {}) => state,
+  router: routerReducer,
+  vip: vipReducer
+});
+
+module.exports = combinedReducers;

@@ -1,6 +1,7 @@
 const express = require('express');
 const React = require('react');
-const { createStore } = require('redux');
+const { createStore, applyMiddleware } = require('redux');
+const thunk = require('redux-thunk').default;
 const { Provider } = require('react-redux');
 const routes = require('../app/routes');
 const ReactDOMServer = require('react-dom/server');
@@ -38,12 +39,12 @@ function getPossibleChunks(url) {
 // This function matches the request url with
 // routes config to know if we need to execute
 // async tasks before rendering
-function getAsyncTasks(url) {
+function getAsyncTasks(url, dispatch) {
   const asyncTasks = [];
   routes.some(route => {
     const match = matchPath(url, route);
     if (match && route.loadData) {
-      asyncTasks.push(route.loadData(match));
+      asyncTasks.push(dispatch(route.loadData(match)));
     }
   });
   return asyncTasks;
@@ -54,7 +55,8 @@ function getAsyncTasks(url) {
 // for the requested url it will be available before
 // the main app chunk (or shell), this way the app rendered
 // on the server will sync with the client one
-function getScripts(requestChunks, staticAssets, isOffline){
+function getScripts(path, staticAssets, isOffline){
+  const requestChunks = getPossibleChunks(path);
   const scripts = [];
   staticAssets['manifest'] ? scripts.push(...staticAssets['manifest'].filter(file => file.endsWith('js'))) : null;
   staticAssets['vendor'] ? scripts.push(...staticAssets['vendor'].filter(file => file.endsWith('js'))) : null;
@@ -80,14 +82,20 @@ function getScriptsTags(scripts){
 
 router.get('*', (req, res) => {
   const context = {};
-  const requestChunks = getPossibleChunks(req.path);
   const isOffline = req.query.offline === 'true';
-  const asyncTasks = getAsyncTasks(req.path);
-  const scripts = getScripts(requestChunks, res.staticAssets, isOffline).map(src => res.staticPath + src);
-  const store = createStore(reducers, []);
-  console.log('offline: ', isOffline);
+  const scripts = getScripts(req.path, res.staticAssets, isOffline).map(src => res.staticPath + src);
+
+  const intialState = {
+    appData: {
+      offline: isOffline
+    }
+  };
+
+  const store = createStore(reducers, intialState, applyMiddleware(thunk));
+  const asyncTasks = getAsyncTasks(req.path, store.dispatch);
+
   Promise.all(asyncTasks)
-    .then(data => {
+    .then(() => {
       const app = ReactDOMServer.renderToString(
         <Provider store={store}>
           <StaticRouter location={req.url} context={context}>

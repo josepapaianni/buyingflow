@@ -1,17 +1,20 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const { AppContainer } = require('react-hot-loader');
-const { BrowserRouter } = require('react-router-dom');
+// const { BrowserRouter } = require('react-router-dom');
+const { ConnectedRouter } = require('react-router-redux');
+const createHistory = require('history/createBrowserHistory').default;
 const { Provider } = require('react-redux');
-const Store = require('../app/store');
 const App = require('../app');
+const history = createHistory();
+const Store = require('./store')(history);
 
 ReactDOM.render(
   <AppContainer>
     <Provider store={Store} >
-      <BrowserRouter>
+      <ConnectedRouter history={history}>
         <App/>
-      </BrowserRouter>
+      </ConnectedRouter>
       </Provider>
   </AppContainer>,
   document.getElementById('root')
@@ -28,9 +31,11 @@ if (module.hot) {
     const NextApp = require('../app');
     ReactDOM.render(
       <AppContainer>
-        <BrowserRouter>
-          <NextApp/>
-        </BrowserRouter>
+        <Provider store={Store} >
+          <ConnectedRouter history={history}>
+            <NextApp/>
+          </ConnectedRouter>
+        </Provider>
       </AppContainer>,
       document.getElementById('root')
     );

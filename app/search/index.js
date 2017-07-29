@@ -1,6 +1,6 @@
 const React = require('react');
 
-class About extends React.Component {
+class Vip extends React.Component {
   render() {
     return (
       <div>soy ab12313out</div>
@@ -8,4 +8,4 @@ class About extends React.Component {
   }
 }
 
-module.exports = About;
+module.exports = Vip;
