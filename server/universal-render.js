@@ -39,12 +39,12 @@ function getPossibleChunks(url) {
 // This function matches the request url with
 // routes config to know if we need to execute
 // async tasks before rendering
-function getAsyncTasks(url, dispatch) {
+function getAsyncTasks(req, dispatch) {
   const asyncTasks = [];
   routes.some(route => {
-    const match = matchPath(url, route);
+    const match = matchPath(req.path, route);
     if (match && route.loadData) {
-      asyncTasks.push(dispatch(route.loadData(match)));
+      asyncTasks.push(dispatch(route.loadData(match, req.query)));
     }
   });
   return asyncTasks;
@@ -92,7 +92,7 @@ router.get('*', (req, res) => {
   };
 
   const store = createStore(reducers, intialState, applyMiddleware(thunk));
-  const asyncTasks = getAsyncTasks(req.path, store.dispatch);
+  const asyncTasks = getAsyncTasks(req, store.dispatch);
 
   Promise.all(asyncTasks)
     .then(() => {
@@ -110,6 +110,7 @@ router.get('*', (req, res) => {
       res.write(`
         <!doctype html>
         <head>
+          <meta charset="UTF-8">
           ${isOffline ? '' : `<script>window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}</script>`}
           <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-128.png">
           ${scriptTags}

@@ -3,6 +3,7 @@ const React = require('react');
 
 const AsyncRoute = require('./components/async-route');
 const loadDataVip = require('./vip/actions').getInitialData;
+const loadDataSearch = require('./search/actions').getInitialData;
 
 let Home, Search, Vip, VipDetail;
 
@@ -38,7 +39,7 @@ const routes = [
   {
     path: '/listado',
     chunkName: 'search',
-    loadData: () => new Promise(resolve => setTimeout(resolve, 4000)),
+    loadData: loadDataSearch,
     render: (subroutes, props) => <AsyncRoute routes={subroutes} component={Search()} {...props} />,
   },
   {

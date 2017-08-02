@@ -1,13 +1,14 @@
+const env = process.env.NODE_ENV || 'production';
+
 require('babel-register')({
     ignore: ['node_modules'],
 });
 
 require('css-modules-require-hook')({
-    generateScopedName: '[path][name]-[local]'
+    generateScopedName: env === 'development' ? '[path][name]-[local]' : '[hash:base64:4]'
 });
 
 const http = require('http');
-const https = require('https');
 const express = require('express');
 const webpack = require('webpack');
 const chokidar = require('chokidar');
@@ -21,7 +22,6 @@ const server = require('./server');
 class ServerApp {
 
     constructor() {
-        const env = process.env.NODE_ENV || 'production';
         if (env === 'development') {
             this.development();
         } else {

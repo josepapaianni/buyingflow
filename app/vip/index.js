@@ -1,8 +1,8 @@
 const React = require('react');
-// const { bindActionCreators } = require('redux');
 const { Link, Route } = require('react-router-dom');
 const { connect } = require('react-redux');
 const actions = require('./actions');
+const qs = require('qs');
 
 class Vip extends React.Component {
   constructor(props){
@@ -10,7 +10,7 @@ class Vip extends React.Component {
   }
 
   componentDidMount(){
-    this.props.getInitialData(this.props.location);
+    this.props.getInitialData(this.props.match, qs.parse(this.props.location.search.substr(1)));
   }
 
   render() {
@@ -30,12 +30,7 @@ class Vip extends React.Component {
 
 const mapStateToProps = (state, ownProps) => ({
   appData: state.appData,
-  location: ownProps.match,
   vip: state.vip
 });
-
-// const mapDispatchToProps = dispatch => ({
-//   getInitialData: bindActionCreators(getInitialData, dispatch),
-// });
 
 module.exports = connect(mapStateToProps, actions)(Vip);

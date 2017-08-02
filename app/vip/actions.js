@@ -20,12 +20,11 @@ function requestDataFail(error) {
   };
 }
 
-const getInitialData = location => (dispatch, getState) => {
-  if (getState().vip.id === location.params.id) return;
-  console.log('aaassd')
+const getInitialData = (match, query) => (dispatch, getState) => {
+  if (getState().vip.id === match.params.id) return;
   dispatch(requestData());
   return new Promise(resolve => {
-    getItemById(location.params.id)
+    getItemById(match.params.id)
       .then(response => resolve(dispatch(requestDataOk(response.data))))
       .catch(error => resolve(dispatch(requestDataFail(error.response.data))));
   })

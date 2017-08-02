@@ -1,0 +1,29 @@
+.container {
+    padding: 1em;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    border-bottom: solid 1px #cfcfcf;
+    width: 100%;
+    display: table;
+    text-align: left;
+    table-layout: fixed;
+}
+
+.thumbnail {
+    background-color: #cfcfcf;
+    display: table-cell;
+    vertical-align: middle;
+    width: 20%;
+    /*margin: 0 0.2em 0 0;*/
+}
+
+.article {
+    display: table-cell;
+    vertical-align: middle;
+    width: 80%;
+}
+
+.container h3 {
+    margin: 0;
+    font-weight: lighter;
+}

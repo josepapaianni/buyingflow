@@ -25,10 +25,16 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
         use: [
           { loader: 'style-loader' },
-          { loader: 'css-loader?modules&localIdentName=[path][name]-[local]' },
+          { loader: 'css-loader?modules&localIdentName=[hash:base64:4]' },
+        ],
+      },
+      {
+        test: /\.(png|svg|gif|jpg)$/,
+        use: [
+          { loader: 'file-loader' },
+          { loader: 'img-loader' }
         ],
       },
     ]

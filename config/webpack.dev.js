@@ -28,7 +28,6 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
         use: [
           { loader: 'style-loader' },
           { loader: 'css-loader?modules&localIdentName=[path][name]-[local]' },
@@ -36,9 +35,9 @@ module.exports = {
       },
       {
         test: /\.(png|svg|gif|jpg)$/,
-        exclude: /node_modules/,
         use: [
           { loader: 'file-loader' },
+          { loader: 'img-loader' }
         ],
       },
     ]
@@ -58,14 +57,14 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
-        name: "vendor",
-        minChunks: function(module){
-          return module.context && module.context.indexOf("node_modules") !== -1;
-        }
+      name: "vendor",
+      minChunks: function(module){
+        return module.context && module.context.indexOf("node_modules") !== -1;
+      }
     }),
     new webpack.optimize.CommonsChunkPlugin({
-        name: "manifest",
-        minChunks: Infinity
+      name: "manifest",
+      minChunks: Infinity
     })
   ]
 };

@@ -1,7 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const { AppContainer } = require('react-hot-loader');
-// const { BrowserRouter } = require('react-router-dom');
 const { ConnectedRouter } = require('react-router-redux');
 const createHistory = require('history/createBrowserHistory').default;
 const { Provider } = require('react-redux');

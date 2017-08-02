@@ -1,0 +1,12 @@
+:global body {
+    margin: 0;
+    background-color: #f5f5f5;
+}
+
+:global .clearfix {
+    clear: both;
+}
+
+.container {
+    margin: 0;
+}
