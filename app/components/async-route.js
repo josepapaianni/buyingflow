@@ -31,7 +31,6 @@ class AsyncRoute extends React.Component {
 
   render(){
     return this.state.component ? <this.state.component {...this.props} /> : <LoadingRoute key={Math.random()} {...this.props}/>
-
   }
 
 }
